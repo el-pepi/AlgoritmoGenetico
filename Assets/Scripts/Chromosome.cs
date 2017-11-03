@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Chromosome {
-	Gen[] gens;
+	public Gen[] gens;
 
 	public float score = 0;
 
