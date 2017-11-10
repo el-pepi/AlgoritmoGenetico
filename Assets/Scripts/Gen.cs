@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Gen {
+[System.Serializable]
+public struct Gen {
 	int action;
 
 	public int Action {
@@ -16,6 +17,9 @@ public class Gen {
 	public float Time {
 		get {
 			return time;
+		}
+		set {
+			time = value;
 		}
 	}
 
