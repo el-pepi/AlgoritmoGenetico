@@ -68,8 +68,9 @@ public class GeneticAlg {
 			Debug.LogError ("wtfbbb");
 		}
 		Gen[] g = new Gen[a.chromosome.gens.Length];
+		int pivot = Random.Range (1,g.Length-1);
 		for (int i = 0; i < g.Length; i++) {
-			if (i < g.Length / 2) {
+			if (i < g.Length / pivot) {
 				g [i] = a.chromosome.gens [i];
 			} else {
 				g [i] = b.chromosome.gens [i];

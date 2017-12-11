@@ -206,12 +206,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d3c15777f3a29344b0a6cce58aaa1cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  agentAmount: 20
-  gensPerChromosome: 10
-  eliteAmount: 2
+  agentAmount: 100
+  gensPerChromosome: 7
+  eliteAmount: 5
   actions: 4
-  mutationChanse: 0
-  mutationAmount: 0
+  mutationChanse: 10
+  mutationAmount: 0.1
   end: {fileID: 438769896}
   shipPrefab: {fileID: 1637300122498312, guid: 509529a5c571cd846ae0b2b9b8ac9670, type: 2}
 --- !u!4 &1352941391

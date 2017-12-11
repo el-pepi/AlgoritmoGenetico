@@ -44,6 +44,9 @@ public class Manager : MonoBehaviour {
 	}
 
 	void FinishedSimulation(){
+		foreach (GameObject s in ships) {
+			s.GetComponent<Ship> ().SetScore();
+		}
 		agents = genAlg.Evolve (agents,eliteAmount);
 
 		foreach (Agent a in agents) {

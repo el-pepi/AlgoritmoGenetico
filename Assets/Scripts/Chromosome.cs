@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class Chromosome {
+public struct Chromosome {
 	public Gen[] gens;
 
-	public float score = 0;
+	public float score;
 
 	public Chromosome(Gen[] gens){
+		this.score = 0;
 		this.gens = gens;
 	}
 }

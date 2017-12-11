@@ -22,9 +22,13 @@ public class Ship : MonoBehaviour {
 		rb = GetComponent<Rigidbody2D> ();
 		explosion = transform.GetChild (0).gameObject;
 		explosion.SetActive (false);
+		agent.chromosome.score = 5000;
 	}
 
 	void FixedUpdate () {
+		if (rb.velocity.y < 0) {
+			agent.chromosome.score -= -10 * Time.deltaTime;
+		}
 		actualTime -= Time.deltaTime;
 		if (actualTime <= 0) {
 			FinishAction ();
@@ -44,21 +48,23 @@ public class Ship : MonoBehaviour {
 			rb.AddForce (Vector2.up * force * 2);
 			break;
 		}
+
 	}
 
 	void OnCollisionEnter2D(Collision2D c){
 		if (!enabled)
 			return;
-		foreach (ContactPoint2D cp in c.contacts) {
+		//foreach (ContactPoint2D cp in c.contacts) {
 			//Debug.Log (cp.relativeVelocity.magnitude);
 			//agent.chromosome.score -= cp.relativeVelocity.magnitude;
-			//if (cp.relativeVelocity.magnitude > 5.5f) {
-				//explosion.SetActive (true);
-				//EndSimulation ();
-				//agent.chromosome.score -= 20;
+		Debug.LogWarning(c.relativeVelocity.magnitude);
+		if (Mathf.Abs( c.relativeVelocity.y) > 5.5f) {
+				explosion.SetActive (true);
+				//agent.chromosome.score = -100;
+				EndSimulation ();
 				return;
-			//}
-		}
+			}
+		//}
 	}
 
 	void FinishAction(){
@@ -71,10 +77,13 @@ public class Ship : MonoBehaviour {
 	}
 
 	void EndSimulation(){
-		agent.chromosome.score =100- Vector3.Distance (transform.position,end.position);
 
-		Debug.Log (agent.chromosome.score);
 		agent.onFinish.Invoke ();
 		enabled = false;
+	}
+
+	public void SetScore(){
+		agent.chromosome.score -=Mathf.Pow( Vector3.Distance (transform.position,end.position),3f);
+		Debug.Log (agent.chromosome.score,gameObject);
 	}
 }
