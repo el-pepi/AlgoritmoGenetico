@@ -27,17 +27,12 @@ public class GeneticAlg {
 	}
 
 	public Agent[] Evolve(Agent[] agents,int elites){
-		//Agent[] toReturn = new Agent[agents.Length];
-
 		List<Agent> toReturn = new List<Agent> ();
 
 		AgentComparer comparer = new AgentComparer();
 		List<Agent> ags = new List<Agent> (agents);
 		ags.Sort (comparer);
-
-		/*for (int i = 0; i < ags.Count; i++) {
-			Debug.Log (ags[i].chromosome.score);
-		}*/
+        
 
 		for (int i = 0; i < elites; i++) {
 			toReturn.Add(ags [i]);
@@ -61,12 +56,6 @@ public class GeneticAlg {
 	}
 
 	Agent MixAgents(Agent a, Agent b){
-		if (a == null) {
-			Debug.LogError ("wtf");
-		}
-		if (b == null) {
-			Debug.LogError ("wtfbbb");
-		}
 		Gen[] g = new Gen[a.chromosome.gens.Length];
 		int pivot = Random.Range (1,g.Length-1);
 		for (int i = 0; i < g.Length; i++) {
