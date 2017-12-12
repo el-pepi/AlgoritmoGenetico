@@ -27,8 +27,8 @@ public class NNManager : MonoBehaviour {
             NeuralNetwork nn = new NeuralNetwork(layerSizes);
 
             GameObject s = Instantiate(shipPrefab);
-            s.GetComponent<NNShip>().nn = nn;
-            s.GetComponent<NNShip>().end = platform;
+            s.GetComponent<NNAgent>().nn = nn;
+			s.GetComponent<NNAgent>().end = platform;
             networks.Add(nn);
             ships.Add(s);
         }
@@ -41,7 +41,7 @@ public class NNManager : MonoBehaviour {
     {
         while (true)
         {
-            yield return new WaitForSeconds(10f);
+            yield return new WaitForSeconds(7f);
             FinishedSimulation();
             ReArrange();
         }
@@ -53,14 +53,14 @@ public class NNManager : MonoBehaviour {
         foreach(GameObject s in ships)
         {
             s.transform.position = RandomPos();
-            s.GetComponent<NNShip>().Restart();
+			s.GetComponent<NNAgent>().Restart();
         }
     }
 
     Vector3 RandomPos()
     {
-        return Vector3.zero;
-        return new Vector3(Random.Range(-playArea.x, playArea.x), Random.Range(-playArea.y, playArea.y), 0);
+//        return Vector3.zero;
+		return new Vector3(Random.Range(0, playArea.x), playArea.y, 0);
     }
 
     float totalScore = 0;
@@ -69,7 +69,7 @@ public class NNManager : MonoBehaviour {
         totalScore = 0;
         foreach (GameObject g in ships)
         {
-            g.GetComponent<NNShip>().SetScore();
+			g.GetComponent<NNAgent>().SetScore();
         }
         foreach(NeuralNetwork n in networks)
         {
@@ -104,7 +104,7 @@ public class NNManager : MonoBehaviour {
         networks = newNets;
         for (int i = 0; i < ships.Count; i++)
         {
-            ships[i].GetComponent<NNShip>().nn = networks[i];
+			ships[i].GetComponent<NNAgent>().nn = networks[i];
         }
     }
 

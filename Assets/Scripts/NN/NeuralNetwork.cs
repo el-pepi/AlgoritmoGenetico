@@ -21,7 +21,7 @@ public class NeuralNetwork {
         {
             layers[i].SetNextLayer(layers[i+1]); ;
         }
-        for (int i = 0; i < layerAmounts.Length; i++)
+        for (int i = 0; i < layerAmounts.Length - 1; i++)
         {
             allNeurons.AddRange(layers[i].Neurons);
         }

@@ -2,18 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NNShip : MonoBehaviour {
+public class NNShip : NNAgent {
     
     Rigidbody2D rb;
 
     public float force = 5f;
 
 
-    public Transform end;
 
     GameObject explosion;
 
-    public NeuralNetwork nn;
 
     void Awake()
     {
@@ -30,15 +28,31 @@ public class NNShip : MonoBehaviour {
 
     void FixedUpdate()
     {
-        if (rb.velocity.y < 0)
-        {
-            nn.score -= -10 * Time.deltaTime;
-        }
+		if (transform.position.y > end.position.y) {
+			nn.score += 500 * Time.deltaTime;
+			if (Mathf.Abs (end.position.x - transform.position.x) < 4 && rb.velocity.y < 0) {
+				nn.score += 100 * Time.deltaTime;
+			}
+		} else {
+			nn.score -= 100 * Time.deltaTime;
+		}
+
+		if (transform.position.x < end.position.x) {
+			if (rb.velocity.x < 0) {
+				nn.score -= 100 * Time.deltaTime;
+			}
+		} else {
+			if (rb.velocity.x > 0) {
+				nn.score -= 100 * Time.deltaTime;
+			}
+		}
+
+
         float[] inputs = new float[4];
-        inputs[0] = rb.velocity.x;
-        inputs[1] = rb.velocity.y;
-        inputs[2] = end.position.x - rb.position.x;
-        inputs[3] = end.position.y - rb.position.y;
+		inputs[0] = rb.velocity.normalized.x;
+		inputs[1] = rb.velocity.normalized.y;
+		inputs[2] = (end.position - (Vector3)rb.position).normalized.x;
+		inputs[3] = (end.position - (Vector3)rb.position).normalized.y;
 
         nn.SetInput(inputs);
         nn.Update();
@@ -46,32 +60,9 @@ public class NNShip : MonoBehaviour {
         float[] outputs = nn.GetOutput();
 
         rb.AddForce(Vector2.right * outputs[0] * force);
-        rb.AddForce(Vector2.left * outputs[1] * force);
-        rb.AddForce(Vector2.up * outputs[2] * force *2);
-
-
-        /*actualTime -= Time.deltaTime;
-        if (actualTime <= 0)
-        {
-            FinishAction();
-            if (!enabled)
-            {
-                return;
-            }
-        }*/
-
-        /*switch (agent.chromosome.gens[actualAction].Action)
-        {
-            case 1:
-                rb.AddForce(Vector2.right * force);
-                break;
-            case 2:
-                rb.AddForce(Vector2.left * force);
-                break;
-            case 3:
-                rb.AddForce(Vector2.up * force * 2);
-                break;
-        }*/
+		rb.AddForce(Vector2.left * outputs[1] * force);
+		rb.AddForce(Vector2.up * outputs[2] * force * 3f);
+		rb.AddForce(Vector2.down * outputs[3] * force * 1.5f);
 
     }
 
@@ -89,20 +80,19 @@ public class NNShip : MonoBehaviour {
         }
     }
 
-    public void SetScore()
+	public override void SetScore()
     {
         nn.score -= Mathf.Pow(Vector3.Distance(transform.position, end.position), 3f);
         if (nn.score < 0)
         {
             nn.score = 0;
         }
-        //Debug.Log(agent.chromosome.score, gameObject);
     }
 
-    public void Restart()
+	public override void Restart()
     {
         rb.velocity = Vector2.zero;
-        nn.score = 0;
+		nn.score = 10000;
         enabled = true;
         explosion.SetActive(false);
     }
