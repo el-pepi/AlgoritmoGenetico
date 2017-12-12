@@ -11,8 +11,10 @@ public class NNManager : MonoBehaviour {
     public int elites = 3;
     public float mutateChanse = 5f;
     public float mutateAmount = 0.1f;
-
+	public float pendiente = 0.5f;
     public Vector2 playArea;
+
+	public bool isTanks;
 
     List<GameObject> ships = new List<GameObject>();
     List<NeuralNetwork> networks = new List<NeuralNetwork>();
@@ -24,7 +26,7 @@ public class NNManager : MonoBehaviour {
         {
             i++;
 
-            NeuralNetwork nn = new NeuralNetwork(layerSizes);
+			NeuralNetwork nn = new NeuralNetwork(layerSizes,pendiente);
 
             GameObject s = Instantiate(shipPrefab);
             s.GetComponent<NNAgent>().nn = nn;
@@ -49,7 +51,8 @@ public class NNManager : MonoBehaviour {
 
     void ReArrange()
     {
-        //platform.position = RandomPos();
+		if(isTanks)
+        platform.position = RandomPos();
         foreach(GameObject s in ships)
         {
             s.transform.position = RandomPos();
@@ -59,8 +62,11 @@ public class NNManager : MonoBehaviour {
 
     Vector3 RandomPos()
     {
-//        return Vector3.zero;
-		return new Vector3(Random.Range(0, playArea.x), playArea.y, 0);
+		//      return Vector3.zero;
+		if(isTanks)
+			return new Vector3(Random.Range(-playArea.x, playArea.x), Random.Range(-playArea.y, playArea.y), 0);
+		else
+			return new Vector3(Random.Range(0, playArea.x), playArea.y, 0);
     }
 
     float totalScore = 0;
@@ -125,7 +131,7 @@ public class NNManager : MonoBehaviour {
 
     NeuralNetwork MixNets(NeuralNetwork a, NeuralNetwork b)
     {
-        NeuralNetwork n = new NeuralNetwork(layerSizes);
+		NeuralNetwork n = new NeuralNetwork(layerSizes,pendiente);
 
         Dictionary<int, float[]> w = new Dictionary<int, float[]>();
         

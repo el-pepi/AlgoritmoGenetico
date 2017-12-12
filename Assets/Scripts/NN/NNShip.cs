@@ -12,6 +12,8 @@ public class NNShip : NNAgent {
 
     GameObject explosion;
 
+	public float up;
+	public float down;
 
     void Awake()
     {
@@ -28,13 +30,30 @@ public class NNShip : NNAgent {
 
     void FixedUpdate()
     {
+
+
+        float[] inputs = new float[4];
+		inputs[0] = rb.velocity.normalized.x;
+		inputs[1] = rb.velocity.normalized.y;
+		inputs[2] = (end.position - transform.position).normalized.x;
+		inputs[3] = (end.position - transform.position).normalized.y;
+
+        nn.SetInput(inputs);
+        nn.Update();
+
+        float[] outputs = nn.GetOutput();
+
+		up = outputs [2];
+		down = outputs [3];
+
 		if (transform.position.y > end.position.y) {
-			nn.score += 500 * Time.deltaTime;
 			if (Mathf.Abs (end.position.x - transform.position.x) < 4 && rb.velocity.y < 0) {
 				nn.score += 100 * Time.deltaTime;
 			}
 		} else {
-			nn.score -= 100 * Time.deltaTime;
+			if (rb.velocity.y > 0) {
+				nn.score += 100 * Time.deltaTime;
+			}
 		}
 
 		if (transform.position.x < end.position.x) {
@@ -46,18 +65,6 @@ public class NNShip : NNAgent {
 				nn.score -= 100 * Time.deltaTime;
 			}
 		}
-
-
-        float[] inputs = new float[4];
-		inputs[0] = rb.velocity.normalized.x;
-		inputs[1] = rb.velocity.normalized.y;
-		inputs[2] = (end.position - (Vector3)rb.position).normalized.x;
-		inputs[3] = (end.position - (Vector3)rb.position).normalized.y;
-
-        nn.SetInput(inputs);
-        nn.Update();
-
-        float[] outputs = nn.GetOutput();
 
         rb.AddForce(Vector2.right * outputs[0] * force);
 		rb.AddForce(Vector2.left * outputs[1] * force);

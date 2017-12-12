@@ -8,8 +8,9 @@ public class NeuralNetwork {
     public float score;
 
     List<Neuron> allNeurons = new List<Neuron>();
+	public float pendiente;
 
-    public NeuralNetwork(int[] layerAmounts)
+	public NeuralNetwork(int[] layerAmounts,float p)
     {
         layers = new Layer[layerAmounts.Length];
 
@@ -19,28 +20,28 @@ public class NeuralNetwork {
         }
         for (int i = 0; i < layerAmounts.Length-1; i++)
         {
-            layers[i].SetNextLayer(layers[i+1]); ;
+			layers[i].SetNextLayer(layers[i+1], i == 0 ? -1f : 0f); ;
         }
         for (int i = 0; i < layerAmounts.Length - 1; i++)
         {
             allNeurons.AddRange(layers[i].Neurons);
         }
+		pendiente = p;
     }
 
     public void SetInput(float[] inputs)
     {
-        Neuron[] inputNeurons = layers[0].Neurons;
         for (int i = 0; i < inputs.Length; i++)
         {
-            inputNeurons[i].value = inputs[i];
+			layers[0].Neurons[i].value = inputs[i];
         }
     }
 
-    public void Update()
+	public void Update()
     {
         for (int i = 1; i < layers.Length; i++)
         {
-            layers[i].Update(layers[i-1]);
+			layers[i].Update(layers[i-1],pendiente);
         }
     }
 

@@ -8,7 +8,7 @@ public class Neuron {
     public float[] weights;
     
 
-    public void Calculate(Neuron[] inputs,int index)
+	public void Calculate(Neuron[] inputs,int index,float pendiente)
     {
         value = 0;
         foreach(Neuron n in inputs)
@@ -16,7 +16,7 @@ public class Neuron {
             value += n.value * n.weights[index];
         }
 
-        value = 1 / (1 +Mathf.Pow(Mathf.Exp(1) , (value / 1)));
+		value = 1 / (1 + Mathf.Exp(value / pendiente));
     }
 
     public void Mutate(float amount)

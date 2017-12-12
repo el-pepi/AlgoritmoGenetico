@@ -238,7 +238,7 @@ MonoBehaviour:
   shipAmount: 20
   layerSizes: 040000000500000007000000080000000600000004000000
   elites: 4
-  mutateChanse: 15
+  mutateChanse: 30
   mutateAmount: 0.3
   playArea: {x: 8, y: -4}
 --- !u!4 &1352941391

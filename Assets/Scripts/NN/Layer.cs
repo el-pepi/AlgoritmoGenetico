@@ -20,14 +20,14 @@ public class Layer {
         }
     }
 
-    public void SetNextLayer(Layer l)
+	public void SetNextLayer(Layer l,float min)
     {
         for (int i = 0; i < neurons.Length; i++)
         {
             neurons[i].weights = new float[l.neurons.Length];
             for (int j = 0; j < neurons[i].weights.Length; j++)
             {
-                neurons[i].weights[j] = Random.Range(0f, 1f);
+                neurons[i].weights[j] = Random.Range(min, 1f);
             }
         }
     }
@@ -45,11 +45,11 @@ public class Layer {
         }
     }
 
-    public void Update(Layer input)
+	public void Update(Layer input,float pendiente)
     {
         for (int i = 0; i < neurons.Length-1; i++)
         {
-            neurons[i].Calculate(input.Neurons,i);
+			neurons[i].Calculate(input.Neurons,i,pendiente);
         }
     }
     /*
