@@ -5,6 +5,9 @@ using UnityEngine;
 public class NeuralNetwork {
 
     Layer[] layers;
+    public float score;
+
+    List<Neuron> allNeurons = new List<Neuron>();
 
     public NeuralNetwork(int[] layerAmounts)
     {
@@ -14,6 +17,14 @@ public class NeuralNetwork {
         {
             layers[i] = new Layer(layerAmounts[i]);
         }
+        for (int i = 0; i < layerAmounts.Length-1; i++)
+        {
+            layers[i].SetNextLayer(layers[i+1]); ;
+        }
+        for (int i = 0; i < layerAmounts.Length; i++)
+        {
+            allNeurons.AddRange(layers[i].Neurons);
+        }
     }
 
     public void SetInput(float[] inputs)
@@ -21,7 +32,7 @@ public class NeuralNetwork {
         Neuron[] inputNeurons = layers[0].Neurons;
         for (int i = 0; i < inputs.Length; i++)
         {
-            inputNeurons[i].Value = inputs[i];
+            inputNeurons[i].value = inputs[i];
         }
     }
 
@@ -40,29 +51,38 @@ public class NeuralNetwork {
 
         for (int i = 0; i < toReturn.Length; i++)
         {
-            toReturn[i] = outputNeurons[i].Value;
+            toReturn[i] = outputNeurons[i].value;
         }
 
         return toReturn;
     }
-
-    void SetWeights(Dictionary<int, float[]> weights)
+    
+    public void SetWeights(Dictionary<int, float[]> weights)
     {
-        for (int i = 0; i < layers.Length; i++)
+        for (int i = 0; i < allNeurons.Count; i++)
         {
-            layers[i].SetWeights(weights[i]);
+            allNeurons[i].weights = weights[i];
+            //layers[i].SetWeights(weights[i]);
         }
     }
 
-    Dictionary<int,float[]> GetWeights()
+    public Dictionary<int,float[]> GetWeights()
     {
         Dictionary<int, float[]> toReturn = new Dictionary<int, float[]>();
 
-        for (int i = 0; i < layers.Length; i++)
+        for (int i = 0; i < allNeurons.Count; i++)
         {
-            toReturn.Add(i, layers[i].GetWeights());
+            toReturn.Add(i, allNeurons[i].weights);
         }
 
         return toReturn;
+    }
+
+    public void Mutate(float chanse,float amount)
+    {
+        if (Random.Range(0f, 100f) < chanse)
+        {
+            allNeurons[Random.Range(0, allNeurons.Count)].Mutate(amount);
+        }
     }
 }

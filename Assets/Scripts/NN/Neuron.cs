@@ -2,45 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Neuron : MonoBehaviour {
+public class Neuron {
 
-    float value;
-    float weight;
+    public float value;
+    public float[] weights;
+    
 
-    public float Value
+    public void Calculate(Neuron[] inputs,int index)
     {
-        get
-        {
-            return value;
-        }
-
-        set
-        {
-            this.value = value;
-        }
-    }
-
-    public float Weight
-    {
-        get
-        {
-            return weight;
-        }
-
-        set
-        {
-            weight = value;
-        }
-    }
-
-    public void Calculate(Neuron[] inputs)
-    {
-        float val = 0;
+        value = 0;
         foreach(Neuron n in inputs)
         {
-            val += n.value * n.weight;
+            value += n.value * n.weights[index];
         }
 
-        val = 1 / (1 +Mathf.Pow(Mathf.Exp(1) , (val / 1)));
+        value = 1 / (1 +Mathf.Pow(Mathf.Exp(1) , (value / 1)));
+    }
+
+    public void Mutate(float amount)
+    {
+        weights[Random.Range(0, weights.Length)] += Random.Range(-amount,amount);
     }
 }

@@ -14,7 +14,20 @@ public class Layer {
             neurons[i] = new Neuron();
             if ( i == neurons.Length - 1)
             {
-                neurons[i].Value = 1;
+                neurons[i].value = 1;
+            }
+            //neurons[i].Weight = Random.Range(0f,1f);
+        }
+    }
+
+    public void SetNextLayer(Layer l)
+    {
+        for (int i = 0; i < neurons.Length; i++)
+        {
+            neurons[i].weights = new float[l.neurons.Length];
+            for (int j = 0; j < neurons[i].weights.Length; j++)
+            {
+                neurons[i].weights[j] = Random.Range(0f, 1f);
             }
         }
     }
@@ -36,10 +49,10 @@ public class Layer {
     {
         for (int i = 0; i < neurons.Length-1; i++)
         {
-            neurons[i].Calculate(input.Neurons);
+            neurons[i].Calculate(input.Neurons,i);
         }
     }
-
+    /*
     public void SetWeights(float[] weights)
     {
         for (int i = 0; i < neurons.Length; i++)
@@ -58,5 +71,5 @@ public class Layer {
         }
 
         return toReturn;
-    }
+    }*/
 }
